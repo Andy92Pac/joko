@@ -4,25 +4,18 @@ const closingBrackets = [')', '}', ']']
 
 
 exports.parseMolecule = (molecule, atoms = {}, multiplicator = 1) => {
-	if (molecule.length === 0) {
-		throw new Error("Molecule can't be an empty string")
-	}
-	if (!isNaN(molecule)) {
-		throw new Error("Number must follow a closing bracket or an element")
-	}
+	if (molecule.length === 0) throw new Error("Molecule can't be an empty string");
+
+	if (!isNaN(molecule)) throw new Error("Number must follow a closing bracket or an element");
 
 	for (let i=0; i<molecule.length; i++) {
 
-		if (closingBrackets.includes(molecule)) {
-			throw new Error("Closing bracket without opening bracket")
-		}
+		if (closingBrackets.includes(molecule)) throw new Error("Closing bracket without opening bracket");
 
 		if (openingBrackets.includes(molecule[i])) {
 			const closingBracketIndex = findClosingBracket(molecule.substring(i))
 
-			if(closingBracketIndex < 0) {
-				throw new Error("Non closing bracket")
-			}
+			if(closingBracketIndex < 0) throw new Error("Non closing bracket");
 
 			const { groupMultiplicator, multiplicatorLength } = getGroupMultiplicator(molecule.substring(i+closingBracketIndex+1))
 
@@ -47,9 +40,8 @@ exports.parseMolecule = (molecule, atoms = {}, multiplicator = 1) => {
 				i++;
 			} 
 			else {
-				if (elements.indexOf(molecule[i]) < 0) {
-					throw new Error("Non existing element")
-				}
+				if (elements.indexOf(molecule[i]) < 0) throw new Error("Non existing element");
+				
 				currentElement = molecule[i]
 			}
 
