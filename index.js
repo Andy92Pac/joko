@@ -11,10 +11,20 @@ exports.parseMolecule = molecule => {
 		for (let i=0; i<molecule.length; i++) {
 
 			if (openingBrackets.includes(molecule[i])) {
-				const closingBracketIndex = findClosingBracket(molecule.substring(i+1, molecule.length))
-				const { groupMultiplicator, cursorMul } = getGroupMultiplicator(molecule.substring(i+closingBracketIndex+2, molecule.length))
-				processMoleculeSubGroup(molecule.substring(i+1, i+closingBracketIndex+1), groupMultiplicator * multiplicator)
-				i+=cursorMul+molecule.substring(i, closingBracketIndex).length+3
+				const closingBracketIndex = findClosingBracket(molecule.substring(i))
+
+				const { groupMultiplicator, multiplicatorLength } = getGroupMultiplicator(molecule.substring(i+closingBracketIndex+1))
+
+				const newMultiplicator = groupMultiplicator * multiplicator
+
+				const subGroup = molecule.substring(i, i+closingBracketIndex+1)
+				const subGroupWithoutBrackets = subGroup.substring(1, subGroup.length-1)
+
+				i+=multiplicatorLength+subGroup.length-1
+
+				processMoleculeSubGroup(subGroupWithoutBrackets, newMultiplicator)
+
+				
 			}
 
 			else {
@@ -29,9 +39,9 @@ exports.parseMolecule = molecule => {
 					currentElement = molecule[i]
 				}
 
-				let { groupMultiplicator, cursorMul } = getGroupMultiplicator(molecule.substring(i+1, molecule.length))
+				let { groupMultiplicator, multiplicatorLength } = getGroupMultiplicator(molecule.substring(i+1, molecule.length))
 
-				i += cursorMul
+				i += multiplicatorLength
 
 				if (!(currentElement in atoms)) {
 					atoms[currentElement] = 0
@@ -52,19 +62,19 @@ exports.parseMolecule = molecule => {
 
 const getGroupMultiplicator = str => {
 	let groupMultiplicator = ''
-	let cursorMul = 0
+	let multiplicatorLength = 0
 
-	while (!isNaN(str[cursorMul])) {
-		groupMultiplicator += str[cursorMul]
-		cursorMul++
+	while (!isNaN(str[multiplicatorLength])) {
+		groupMultiplicator += str[multiplicatorLength]
+		multiplicatorLength++
 	}
 
 	groupMultiplicator = groupMultiplicator.length > 0 ? parseInt(groupMultiplicator) : 1 
-	return { groupMultiplicator, cursorMul }
+	return { groupMultiplicator, multiplicatorLength }
 }
 
 const findClosingBracket = str => {
-	let openedBrackets = 1
+	let openedBrackets = 0
 	for(let i=0; i<str.length; i++) {
 		if (openingBrackets.includes(str[i])) {
 			openedBrackets++;

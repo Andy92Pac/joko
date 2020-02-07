@@ -15,6 +15,9 @@ describe('Tests molecular parser', function() {
 	});
 
 	it('should return the correct object', function() {
-		assert.deepEqual(parseMolecule('H2O'), { H: 2, O: 1 });
+		assert.deepEqual(parseMolecule('({H})2O'), { H: 2, O: 1 });
+	});
+	it('should return the correct object', function() {
+		assert.deepEqual(parseMolecule('((({H})2)O)(O4)'), { H: 2, O: 5 });
 	});
 });
