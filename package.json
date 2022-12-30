@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Andy92Pac/joko#readme",
   "devDependencies": {
-    "mocha": "^7.0.1"
+    "mocha": "^10.2.0"
   }
 }
